@@ -1,0 +1,250 @@
+#VRML_SIM V6.0 utf8
+WorldInfo {
+  info [
+    "Description"
+    "Author: first name last name <e-mail>"
+    "Date: DD MMM YYYY"
+  ]
+}
+Viewpoint {
+  orientation 0.373867 0.892943 0.250752 5.71141
+  position -0.261666 0.326104 0.606905
+}
+Background {
+  skyColor [
+    0.4 0.7 1
+  ]
+}
+PointLight {
+  ambientIntensity 0.5
+  attenuation 1 1 1
+  location 0 0.1 0
+}
+Solid {
+  translation -0.5 0 -0.5
+  children [
+    Shape {
+      geometry ElevationGrid {
+        color Color {
+          color [
+            0.803922 0.498039 0.298039
+            1 1 0
+          ]
+        }
+        colorPerVertex FALSE
+        xDimension 11
+        xSpacing 0.1
+        zDimension 11
+        zSpacing 0.1
+      }
+    }
+  ]
+  boundingObject Shape {
+    geometry IndexedFaceSet {
+      coord Coordinate {
+        point [
+          0 0 0
+          0 0 1
+          1 0 1
+          1 0 0
+        ]
+      }
+      coordIndex [
+        0, 1, 2, 3, -1
+      ]
+    }
+  }
+}
+DEF B Solid {
+  children [
+    Shape {
+      geometry Box {
+        size 0.05 0.01 0.09
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry Box {
+      size 0.05 0.01 0.09
+    }
+  }
+}
+DEF prisma Solid {
+  translation 0 0.03 0
+  children [
+    Shape {
+      geometry Box {
+        size 0.01 0.05 0.08
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry Box {
+      size 0.01 0.05 0.08
+    }
+  }
+}
+DEF col1 Solid {
+  translation 0 0.04 0.042
+  children [
+    Shape {
+      geometry Box {
+        size 0.01 0.07 0.005
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry Box {
+      size 0.01 0.07 0.005
+    }
+  }
+}
+DEF col2 Solid {
+  translation 0 0.04 -0.042
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.01 0.07 0.005
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.01 0.07 0.005
+    }
+  }
+}
+DEF A Solid {
+  translation 0 0.0605 0
+  rotation 0 1 0 1.57
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.08 0.01 0.7
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.08 0.01 0.7
+    }
+  }
+}
+DEF rebordeVert1 Solid {
+  translation 0 0.07 -0.04
+  rotation 0 1 0 1.57
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.005 0.01 0.7
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.005 0.01 0.7
+    }
+  }
+}
+DEF rebordeVert2 Solid {
+  translation 0 0.07 0.04
+  rotation 0 1 0 1.57
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.005 0.01 0.7
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.005 0.01 0.7
+    }
+  }
+}
+DEF rebordeHor1 Solid {
+  translation -0.345 0.0705 0
+  rotation 0 1 0 1.57
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.08 0.02 0.01
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.08 0.02 0.01
+    }
+  }
+}
+DEF rebordeHor2 Solid {
+  translation 0.345 0.0705 0
+  rotation 0 1 0 1.57
+  children [
+    Shape {
+      geometry DEF box Box {
+        size 0.08 0.02 0.01
+      }
+    }
+  ]
+  boundingObject Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 1 1
+        specularColor 1 1 1
+      }
+    }
+    geometry DEF box Box {
+      size 0.08 0.02 0.01
+    }
+  }
+}
