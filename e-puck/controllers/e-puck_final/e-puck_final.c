@@ -22,8 +22,8 @@
 
 #define GRAVITY             9.8
 
-#define ACC_THRESHOLD       0.09
-#define ACC_THRESHOLD_LITLE 0.15
+#define ACC_THRESHOLD       0.05
+#define ACC_THRESHOLD_LITLE 0.13
 
 #define ACTIONS             3
 #define STATES              5
@@ -37,7 +37,7 @@
 #define TRAIN_ACTIVE        1
 
 
-int epsilon_count = 5; //cantidad de epocas
+int epsilon_count = 1; //cantidad de epocas
 float eps = MAX_EPS;
 
 
@@ -48,12 +48,18 @@ float eps = MAX_EPS;
 };*/
 
 float Q[STATES][ACTIONS] = {
-{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0} 
+{0,0,0},
+{0,0,0},
+{0,0,0},
+{0,0,0},
+{0,0,0} 
 };
 
 
 double getAcceleration(WbDeviceTag accelerometer) {
     double * value =wb_accelerometer_get_values(accelerometer);   
+    //printf("otra posible medida? %f\n",sin(value[X_AXIS]));
+    //return asin(value[X_AXIS]);
     return (atan2(value[Y_AXIS],value[X_AXIS])-M_PI/2)/(2*M_PI)*360;
 }
 
@@ -103,8 +109,9 @@ int main(int argc, char *argv[]) {
           updateQ(nextAction, prevState, currentState, reinforcement);
         
         updateEpsilon();
-        
+        print_matrix();
         prevState = currentState;
+        
     }
     
     return 0;
@@ -130,7 +137,7 @@ State
 getNewState(WbDeviceTag tag) {
     
     float a = getAcceleration(tag);
-    printf("aceleracion: %f\n∫",a);
+    printf("aceleracion: %f\n",a);
     if (fabs(a) < ACC_THRESHOLD) {
         return BALANCED;
     } else if (a >= 0) { 
@@ -182,66 +189,30 @@ reinforcement_function(State actualState, State prevState ) {
   } else {
     return 0;
   }*/
-  
-  if(prevState== BALANCED){
-    if(actualState==BALANCED){
-      return 100;
-    }
-    else if(actualState==LOW || actualState==HIGH){
-      return -50;
-    }
-    else{
-      return -5;
-    }
+  if(prevState==actualState && actualState==BALANCED){
+    return 100;
   }
-  else if(prevState==LITLE_LOW){
-    if(actualState==LITLE_LOW){
-      return -1;
-    }
-    else if(actualState==BALANCED){
-      return 50;
-    }
-    else if(actualState==LOW){
-      return -10;
-    }
-    
+  else if(prevState==actualState && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+    return -10;
   }
-  else if(prevState==LOW){
-    if(actualState==LOW){
-      return -100;
-    }
-    else if(actualState==BALANCED){
-      return 50;
-    }
-    else if(actualState==LITLE_LOW){
-      return 20;
-    }
+  else if(prevState==actualState && (actualState==LOW || actualState==HIGH)){
+    return -100;
   }
-  else if(prevState==LITLE_HIGH){
-    
-    if(actualState==LITLE_HIGH){
-      return -1;
-    }
-    else if(actualState==BALANCED){
-      return 50;
-    }
-    else if(actualState==HIGH){
-      return -10;
-    }
-    
+  else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+    return -5;
   }
-  else if(prevState==HIGH){
-    if(actualState==HIGH){
-      return -100;
-    }
-    else if(actualState==BALANCED){
-      return 50;
-    }
-    else if(actualState==LITLE_HIGH){
-      return 20;
-    }
+  else if(prevState==BALANCED && (actualState==LOW || actualState==HIGH)){
+    return -50;
   }
-  
+  else if(actualState==BALANCED){
+    return 50;
+  }
+  else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+    return 20;
+  }
+  else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
+    return -10;
+  }
   return 0;
 }
 
