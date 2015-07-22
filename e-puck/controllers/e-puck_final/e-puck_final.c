@@ -22,10 +22,10 @@
 
 #define GRAVITY             9.8
 
-#define ACC_THRESHOLD       1
-#define ACC_THRESHOLD_LITLE 5
+#define ACC_THRESHOLD       1.3
+#define ACC_THRESHOLD_LITLE 4
 
-#define ACTIONS             3
+#define ACTIONS             5
 #define STATES              5
 
 #define GAMMA               0.9 
@@ -37,7 +37,7 @@
 #define TRAIN_ACTIVE        1
 
 
-int epsilon_count = 1; //cantidad de epocas
+int epsilon_count = 2; //cantidad de epocas
 float eps = MAX_EPS;
 
 
@@ -68,7 +68,7 @@ typedef enum {
 } State;
 
 typedef enum {
-    STAY, GO_FOWARD, GO_BACKWARD
+    STAY, GO_FOWARD_LITLE, GO_FOWARD, GO_BACKWARD_LITLE, GO_BACKWARD
 } Action;
 
 State getNewState(WbDeviceTag tag);
@@ -120,11 +120,17 @@ int main(int argc, char *argv[]) {
 void
 executeAction(const Action nextAction) {
   
-    if (nextAction == GO_FOWARD) {
+    if (nextAction == GO_FOWARD_LITLE) {
         wb_differential_wheels_set_speed(FORWARD_SPEED, FORWARD_SPEED);
-    } else if (nextAction == GO_BACKWARD) {
+    } 
+    else if (nextAction == GO_FOWARD) {
+        wb_differential_wheels_set_speed(2*FORWARD_SPEED, 2*FORWARD_SPEED);
+    } else if (nextAction == GO_BACKWARD_LITLE) {
         wb_differential_wheels_set_speed(-BACKWARD_SPEED, -BACKWARD_SPEED);
-    } else {
+    } else if (nextAction == GO_BACKWARD){ 
+        wb_differential_wheels_set_speed(-2*BACKWARD_SPEED, -2*BACKWARD_SPEED);
+    }
+    else {
         wb_differential_wheels_set_speed(0, 0);
     }
 
@@ -190,28 +196,28 @@ reinforcement_function(State actualState, State prevState ) {
     return 0;
   }*/
   if(prevState==actualState && actualState==BALANCED){
-    return 100;
+    return 200;
   }
   else if(prevState==actualState && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return -10;
+    return -20;
   }
   else if(prevState==actualState && (actualState==LOW || actualState==HIGH)){
-    return -100;
+    return -50;
   }
   else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return -5;
+    return -10;
   }
   else if(prevState==BALANCED && (actualState==LOW || actualState==HIGH)){
     return -50;
   }
   else if(actualState==BALANCED){
-    return 50;
+    return 100;
   }
   else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return 20;
+    return 10;
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
-    return -10;
+    return -30;
   }
   return 0;
 }
