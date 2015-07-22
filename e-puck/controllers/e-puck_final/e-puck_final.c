@@ -22,8 +22,8 @@
 
 #define GRAVITY             9.8
 
-#define ACC_THRESHOLD       0.05
-#define ACC_THRESHOLD_LITLE 0.13
+#define ACC_THRESHOLD       1
+#define ACC_THRESHOLD_LITLE 5
 
 #define ACTIONS             3
 #define STATES              5
@@ -60,7 +60,7 @@ double getAcceleration(WbDeviceTag accelerometer) {
     double * value =wb_accelerometer_get_values(accelerometer);   
     //printf("otra posible medida? %f\n",sin(value[X_AXIS]));
     //return asin(value[X_AXIS]);
-    return (atan2(value[Y_AXIS],value[X_AXIS])-M_PI/2)/(2*M_PI)*360;
+    return (asin(value[Z_AXIS]/GRAVITY))*180/M_PI;
 }
 
 typedef enum {
