@@ -7,7 +7,7 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.263169 0.961877 -0.0744016 3.23971
+  orientation -0.263169 0.961876 -0.0744016 3.23971
   position 0.00177437 0.0545821 -2.33442
 }
 Background {
@@ -4278,6 +4278,7 @@ DEF E_PUCK DifferentialWheels {
     density -1
     mass 0.15
   }
+  controller "e-puck_final_companion_learning"
   axleLength 0.052
   wheelRadius 0.0205
   maxSpeed 6.28

@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.263169 0.961877 -0.0744016 3.23971
-  position 0.00177437 0.0545821 -2.33442
+  orientation -0.208851 0.843592 0.494706 2.94247
+  position -0.163282 1.82632 -0.601304
 }
 Background {
   skyColor [
@@ -167,8 +167,8 @@ DEF B Solid {
   }
 }
 DEF A Solid {
-  translation 0.00229669 0.0597875 6.66482e-07
-  rotation -0.00553715 0.999972 0.0049363 1.57196
+  translation 0.00237382 0.0598001 -5.76895e-06
+  rotation -0.0156225 0.999759 0.015391 1.57245
   children [
     DEF rebordeHor2 Transform {
       translation 0.003 0.01 -0.349
@@ -308,12 +308,12 @@ DEF A Solid {
   }
 }
 DEF E_PUCK DifferentialWheels {
-  translation 0.271499 0.0674919 0.000476156
-  rotation -0.005372 0.999977 0.00417926 1.74906
+  translation 0.109933 0.0680263 0.00245086
+  rotation -0.0156948 0.999795 0.0127619 1.75043
   children [
     DEF EPUCK_LEFT_WHEEL Solid {
-      translation -0.0259998 0.0200336 -5.20305e-07
-      rotation 0.999999 -0.000164424 -0.00123774 2.06964
+      translation -0.0260005 0.0200311 -8.84843e-07
+      rotation 0.999999 -0.000164998 -0.00123769 -1.75339
       children [
         DEF EPUCK_WHEEL Transform {
           rotation 0 0 1 1.57
@@ -448,8 +448,8 @@ DEF E_PUCK DifferentialWheels {
       }
     }
     DEF EPUCK_RIGHT_WHEEL Solid {
-      translation 0.0256023 0.0200323 -6.81059e-07
-      rotation 0.999988 -0.00105789 -0.00476998 2.25419
+      translation 0.0256022 0.0200299 -8.9595e-07
+      rotation 0.999988 -0.00105845 -0.00476993 -1.56883
       children [
         Transform {
           rotation 0 1 0 3.14159
@@ -2298,12 +2298,12 @@ DEF E_PUCK DifferentialWheels {
   encoderResolution 159.23
 }
 DEF E_PUCK DifferentialWheels {
-  translation -0.196837 0.0625813 -0.00150579
-  rotation -0.00544469 0.999977 0.00411751 1.74962
+  translation -0.220067 0.0680263 0.00245086
+  rotation -0.0156948 0.999795 0.0127619 1.75043
   children [
     DEF EPUCK_LEFT_WHEEL Solid {
-      translation -0.0260017 0.0200334 -2.02787e-06
-      rotation 0.999999 -0.000164617 -0.00123749 2.72127
+      translation -0.0260005 0.0200311 -8.84843e-07
+      rotation 0.999999 -0.000164998 -0.00123769 -1.75339
       children [
         DEF EPUCK_WHEEL Transform {
           rotation 0 0 1 1.57
@@ -2438,8 +2438,8 @@ DEF E_PUCK DifferentialWheels {
       }
     }
     DEF EPUCK_RIGHT_WHEEL Solid {
-      translation 0.0256001 0.0200325 -1.98269e-06
-      rotation 0.999988 -0.00105802 -0.00476971 2.90583
+      translation 0.0256022 0.0200299 -8.9595e-07
+      rotation 0.999988 -0.00105845 -0.00476993 -1.56883
       children [
         Transform {
           rotation 0 1 0 3.14159
@@ -4278,6 +4278,7 @@ DEF E_PUCK DifferentialWheels {
     density -1
     mass 0.15
   }
+  controller "e-puck_final_companion_learning"
   axleLength 0.052
   wheelRadius 0.0205
   maxSpeed 6.28

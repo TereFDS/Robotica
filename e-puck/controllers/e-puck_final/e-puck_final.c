@@ -37,7 +37,7 @@
 #define TRAIN_ACTIVE        1
 
 
-int epsilon_count = 2; //cantidad de epocas
+int epsilon_count = 3; //cantidad de epocas
 float eps = MAX_EPS;
 
 
@@ -97,13 +97,11 @@ int main(int argc, char *argv[]) {
     // ENABLING WHEELS
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
     wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
-    printf("shalala\n");
     prevState = getNewState(accelerometer);
     
     for (;;) {
         nextAction = chooseAction(prevState);
-        executeAction(nextAction);
-        
+        executeAction(nextAction);      
         currentState = getNewState(accelerometer);
         printf("estait: %d\n",currentState);
         if (TRAIN_ACTIVE == 1)
@@ -204,7 +202,7 @@ reinforcement_function(State actualState, State prevState ) {
     return -20;
   }
   else if(prevState==actualState && (actualState==LOW || actualState==HIGH)){
-    return -60;
+    return -40;
   }
   else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
     return -40;
@@ -216,10 +214,10 @@ reinforcement_function(State actualState, State prevState ) {
     return 100;
   }
   else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return 20;
+    return 40;
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
-    return -80;
+    return -100;
   }
   return 0;
 }
@@ -234,7 +232,7 @@ getMaxRewardAction(State state) {
   short i = state;
   int j = 0, max_index = 0;
   
-  for (j = 0; j <= ACTIONS; j++){
+  for (j = 0; j < ACTIONS; j++){
     if(Q[i][max_index] <= Q[i][j]){
       max_index = j;
     }

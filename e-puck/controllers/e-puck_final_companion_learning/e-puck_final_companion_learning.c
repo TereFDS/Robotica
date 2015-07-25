@@ -1,6 +1,5 @@
 #include <webots/robot.h>
 #include <webots/differential_wheels.h>
-#include <webots/accelerometer.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -16,8 +15,8 @@
 #define Y_AXIS              2
 #define Z_AXIS              1
 
-#define FORWARD_SPEED       170
-#define BACKWARD_SPEED      170
+#define FORWARD_SPEED       100
+#define BACKWARD_SPEED      100
 
 
 #define GRAVITY             9.8
@@ -47,22 +46,6 @@ float eps = MAX_EPS;
 {7.219242, 5321.901367, 931.141235} 
 };*/
 
-float Q[STATES][ACTIONS] = {
-{0,0,0},
-{0,0,0},
-{0,0,0},
-{0,0,0},
-{0,0,0} 
-};
-
-
-double getAcceleration(WbDeviceTag accelerometer) {
-    double * value =wb_accelerometer_get_values(accelerometer);   
-    //printf("otra posible medida? %f\n",sin(value[X_AXIS]));
-    //return asin(value[X_AXIS]);
-    return (asin(value[Z_AXIS]/GRAVITY))*180/M_PI;
-}
-
 typedef enum {
     BALANCED, LITLE_LOW, LOW, LITLE_HIGH, HIGH
 } State;
@@ -70,6 +53,9 @@ typedef enum {
 typedef enum {
     STAY, GO_FOWARD_LITLE, GO_FOWARD, GO_BACKWARD_LITLE, GO_BACKWARD
 } Action;
+
+Action chooseAction();
+void executeAction(const Action nextAction);
 
 
 int main(int argc, char *argv[]) {
@@ -80,24 +66,43 @@ int main(int argc, char *argv[]) {
     
     // ENABLING WHEELS
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
-    wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
     
     for (;;) {
-        wb_differential_wheels_set_speed(FORWARD_SPEED, FORWARD_SPEED);        
-        wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
-        /*nextAction = chooseAction(prevState);
+        Action nextAction;
+        nextAction = chooseAction();
         executeAction(nextAction);
         
-        currentState = getNewState(accelerometer);
-        printf("estait: %d\n",currentState);
-        if (TRAIN_ACTIVE == 1)
-          updateQ(nextAction, prevState, currentState, reinforcement);
         
-        updateEpsilon();
-        print_matrix();
-        prevState = currentState;
-        */
     }
     
     return 0;
+}
+
+void
+executeAction(const Action nextAction) {
+  
+    if (nextAction == GO_FOWARD_LITLE) {
+        wb_differential_wheels_set_speed(FORWARD_SPEED, FORWARD_SPEED);
+    } 
+    else if (nextAction == GO_FOWARD) {
+        wb_differential_wheels_set_speed(1*FORWARD_SPEED, 1*FORWARD_SPEED);
+    } else if (nextAction == GO_BACKWARD_LITLE) {
+        wb_differential_wheels_set_speed(-BACKWARD_SPEED, -BACKWARD_SPEED);
+    } else if (nextAction == GO_BACKWARD){ 
+        wb_differential_wheels_set_speed(-1*BACKWARD_SPEED, -1*BACKWARD_SPEED);
+    }
+    else {
+        wb_differential_wheels_set_speed(0, 0);
+    }
+
+
+  wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
+
+}
+
+Action
+chooseAction() {
+    Action next_action;
+    next_action= rand() % ACTIONS;
+    return next_action;
 }
