@@ -16,13 +16,13 @@
 #define Y_AXIS              2
 #define Z_AXIS              1
 
-#define FORWARD_SPEED       200
-#define BACKWARD_SPEED      200
+#define FORWARD_SPEED       170
+#define BACKWARD_SPEED      170
 
 
 #define GRAVITY             9.8
 
-#define ACC_THRESHOLD       1.3
+#define ACC_THRESHOLD       1.4
 #define ACC_THRESHOLD_LITLE 4
 
 #define ACTIONS             5
@@ -97,6 +97,7 @@ int main(int argc, char *argv[]) {
     // ENABLING WHEELS
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
     wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
+    printf("shalala\n");
     prevState = getNewState(accelerometer);
     
     for (;;) {
@@ -151,6 +152,7 @@ getNewState(WbDeviceTag tag) {
     } else if (a < 0) {
         return (fabs(a)<ACC_THRESHOLD_LITLE)?LITLE_HIGH:HIGH;
     }
+
 }
 
 Action
@@ -202,22 +204,22 @@ reinforcement_function(State actualState, State prevState ) {
     return -20;
   }
   else if(prevState==actualState && (actualState==LOW || actualState==HIGH)){
-    return -50;
+    return -60;
   }
   else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return -10;
+    return -40;
   }
   else if(prevState==BALANCED && (actualState==LOW || actualState==HIGH)){
-    return -50;
+    return -160;
   }
   else if(actualState==BALANCED){
     return 100;
   }
   else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return 10;
+    return 20;
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
-    return -30;
+    return -80;
   }
   return 0;
 }
