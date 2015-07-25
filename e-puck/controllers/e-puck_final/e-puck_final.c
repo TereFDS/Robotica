@@ -22,8 +22,8 @@
 
 #define GRAVITY             9.8
 
-#define ACC_THRESHOLD       1.4
-#define ACC_THRESHOLD_LITLE 4
+#define ACC_THRESHOLD       1.3
+#define ACC_THRESHOLD_LITLE 3.8
 
 #define ACTIONS             5
 #define STATES              5
@@ -77,7 +77,7 @@ void executeAction(const Action nextAction);
 void updateQ(Action action, State prevState, State currentState,float reinforcement);
 Action getMaxRewardAction(State state);
 float random_num();
-int reinforcement_function(State actualState, State prevState);
+int reinforcement_function(Action action, State actualState, State prevState);
 void updateEpsilon();
 void print_matrix();
 
@@ -172,7 +172,7 @@ chooseAction(const State state) {
 void
 updateQ(Action action, State prevState, State currentState, float reinforcement) {
     
-    int r = reinforcement_function(currentState,prevState);
+    int r = reinforcement_function(action, currentState,prevState);
     short bestAction = getMaxRewardAction(currentState);
     float max = GAMMA * Q[currentState][bestAction];
     
@@ -181,7 +181,7 @@ updateQ(Action action, State prevState, State currentState, float reinforcement)
 
 //revisar
 int
-reinforcement_function(State actualState, State prevState ) {
+reinforcement_function(Action action, State actualState, State prevState ) {
   /*if (actualState == LOW && prevState == LOW) {
     return 0;
   } else if (actualState == HIGH && prevState == HIGH) {
@@ -198,11 +198,29 @@ reinforcement_function(State actualState, State prevState ) {
   if(prevState==actualState && actualState==BALANCED){
     return 200;
   }
-  else if(prevState==actualState && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+  else if(prevState==actualState && (actualState==LITLE_LOW)){
+    if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
+      return 20;
+    }
     return -20;
   }
-  else if(prevState==actualState && (actualState==LOW || actualState==HIGH)){
-    return -40;
+  else if(prevState==actualState && (actualState==LITLE_HIGH)){
+    if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
+      return 20;
+    }
+    return -20;
+  }
+  else if(prevState==actualState && (actualState==LOW)){
+    if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
+      return 80;
+    }
+    return -50;
+  }
+  else if(prevState==actualState && (actualState==HIGH)){
+    if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
+      return 80;
+    }
+    return -50;
   }
   else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
     return -40;
@@ -214,7 +232,7 @@ reinforcement_function(State actualState, State prevState ) {
     return 100;
   }
   else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return 40;
+    return 60;
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
     return -100;
