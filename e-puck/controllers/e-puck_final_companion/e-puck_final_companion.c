@@ -38,14 +38,8 @@
 
 
 int epsilon_count = 3; //cantidad de epocas
-float eps = MAX_EPS;
+float eps = 0;
 
-
-/*float Q[STATES][ACTIONS] = {
-{-9011.671875, -13301.423828, -9372.247070}, 
-{-2658.381104, 44.130100, 11997.417969}, 
-{7.219242, 5321.901367, 931.141235} 
-};*/
 
 float Q[STATES][ACTIONS] = {
 {0,0,0},
@@ -82,6 +76,8 @@ void updateEpsilon();
 void print_matrix();
 void save_matrix();
 void read_matrix();
+void transpose_matrix();
+
 
 int main(int argc, char *argv[]) {
     float yAcceleration;
@@ -91,7 +87,7 @@ int main(int argc, char *argv[]) {
     
     /* initialize Webots */
     wb_robot_init();
-    read_matrix();
+    
     /* ENABLE ACCELEROMETER */
     WbDeviceTag accelerometer = wb_robot_get_device("accelerometer");
     wb_accelerometer_enable(accelerometer, TIME_STEP*TIME_STEP_MULTIPLIER);
@@ -100,17 +96,16 @@ int main(int argc, char *argv[]) {
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
     wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
     prevState = getNewState(accelerometer);
-    
+    read_matrix();
+    transpose_matrix();
     for (;;) {
         nextAction = chooseAction(prevState);
         executeAction(nextAction);      
         currentState = getNewState(accelerometer);
-        printf("estait: %d\n",currentState);
+        //printf("estait: %d\n",currentState);
         if (TRAIN_ACTIVE == 1)
           updateQ(nextAction, prevState, currentState, reinforcement);
         
-        updateEpsilon();
-        print_matrix();
         prevState = currentState;
         
     }
@@ -144,7 +139,7 @@ State
 getNewState(WbDeviceTag tag) {
     
     float a = getAcceleration(tag);
-    printf("aceleracion: %f\n",a);
+    //printf("aceleracion: %f\n",a);
     if (fabs(a) < ACC_THRESHOLD) {
         return BALANCED;
     } else if (a >= 0) { 
@@ -161,11 +156,11 @@ chooseAction(const State state) {
     Action next_action;
     if (r >= eps) {
         // exploit
-        printf("exploit\n");
+        //printf("exploit\n");
         next_action = getMaxRewardAction(state);        
     } else {
         //explore
-        printf("explore\n");
+        //printf("explore\n");
         next_action= rand() % ACTIONS;
     }
         return next_action;
@@ -269,11 +264,11 @@ updateEpsilon() {
       } else {
         eps = 0;
       }
-      //save_matrix();
+      save_matrix();
     } else {
         eps -= EPSILON_DELTA;
     }
-    printf("epsilon: %f \n",eps);
+    //printf("epsilon: %f \n",eps);
 }
 
 void print_matrix(){
@@ -302,4 +297,17 @@ void read_matrix(){
     fread(Q,sizeof(float),STATES*ACTIONS,fp);
   }
   fclose(fp);
+}
+
+// ojo, solo sirve para matrices simetricas!!!!
+void transpose_matrix(){
+  int n,i,j;
+  for(i=0; i< STATES; i++){
+    for(j=i; j<ACTIONS;j++){
+      float aux = Q[i][j];
+      Q[i][j] = Q[j][i];
+      Q[j][i] = aux;
+    }
+  }
+
 }

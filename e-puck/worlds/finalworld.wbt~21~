@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.321047 0.820974 0.472155 2.57633
-  position 0.141792 1.78098 -0.847881
+  orientation -0.263169 0.961877 -0.0744016 3.23971
+  position 0.00177437 0.0545821 -2.33442
 }
 Background {
   skyColor [
@@ -2299,7 +2299,7 @@ DEF E_PUCK DifferentialWheels {
 }
 DEF E_PUCK DifferentialWheels {
   translation -0.196837 0.0625813 -0.00150579
-  rotation -0.00498444 0.999973 -0.00536183 4.68826
+  rotation -0.00544469 0.999977 0.00411751 1.74962
   children [
     DEF EPUCK_LEFT_WHEEL Solid {
       translation -0.0260017 0.0200334 -2.02787e-06

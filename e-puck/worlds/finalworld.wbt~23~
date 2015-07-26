@@ -4278,7 +4278,6 @@ DEF E_PUCK DifferentialWheels {
     density -1
     mass 0.15
   }
-  controller "e-puck_final_companion"
   axleLength 0.052
   wheelRadius 0.0205
   maxSpeed 6.28
