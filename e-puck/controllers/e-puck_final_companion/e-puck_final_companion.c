@@ -34,7 +34,7 @@
 #define EPSILON_DELTA       0.001
 
 #define MAX_EPS             1
-#define TRAIN_ACTIVE        1
+#define TRAIN_ACTIVE        0
 
 
 int epsilon_count = 3; //cantidad de epocas
@@ -42,13 +42,22 @@ float eps = 0;
 
 
 float Q[STATES][ACTIONS] = {
+{408.846466, 398.468719, 409.099731, 385.317017, 409.766296}, 
+{379.227448, 458.710358, 428.249939, 392.432892, 389.561829},
+{437.941528, 536.843750, 549.125122, 429.928955, 441.923462},
+{276.978668, 319.857056, 319.968262, 326.143463, 269.744568}, 
+{293.818787, 316.082855, 253.805588, 638.329224, 489.348602}
+};
+
+/*
+float Q[STATES][ACTIONS] = {
 {0,0,0},
 {0,0,0},
 {0,0,0},
 {0,0,0},
 {0,0,0} 
 };
-
+*/
 
 double getAcceleration(WbDeviceTag accelerometer) {
     double * value =wb_accelerometer_get_values(accelerometer);   
@@ -96,8 +105,8 @@ int main(int argc, char *argv[]) {
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
     wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
     prevState = getNewState(accelerometer);
-    read_matrix();
-    transpose_matrix();
+    //read_matrix();
+    //transpose_matrix();
     for (;;) {
         nextAction = chooseAction(prevState);
         executeAction(nextAction);      
@@ -264,7 +273,7 @@ updateEpsilon() {
       } else {
         eps = 0;
       }
-      save_matrix();
+      //save_matrix();
     } else {
         eps -= EPSILON_DELTA;
     }

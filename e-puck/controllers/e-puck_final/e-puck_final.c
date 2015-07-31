@@ -39,13 +39,18 @@
 
 int epsilon_count = 3; //cantidad de epocas
 float eps = MAX_EPS;
+float learning_reinforcement[(int)(MAX_EPS/EPSILON_DELTA)*4];
+int learning_index= 0;
 
 
 /*float Q[STATES][ACTIONS] = {
-{-9011.671875, -13301.423828, -9372.247070}, 
-{-2658.381104, 44.130100, 11997.417969}, 
-{7.219242, 5321.901367, 931.141235} 
+{408.846466, 398.468719, 409.099731, 385.317017, 409.766296}, 
+{379.227448, 458.710358, 428.249939, 392.432892, 389.561829},
+{437.941528, 536.843750, 549.125122, 429.928955, 441.923462},
+{276.978668, 319.857056, 319.968262, 326.143463, 269.744568}, 
+{293.818787, 316.082855, 253.805588, 638.329224, 489.348602}
 };*/
+
 
 float Q[STATES][ACTIONS] = {
 {0,0,0},
@@ -82,6 +87,8 @@ void updateEpsilon();
 void print_matrix();
 void save_matrix();
 void read_matrix();
+void write_learning_curve();
+
 
 int main(int argc, char *argv[]) {
     float yAcceleration;
@@ -91,7 +98,8 @@ int main(int argc, char *argv[]) {
     
     /* initialize Webots */
     wb_robot_init();
-    read_matrix();
+    //read_matrix();
+    
     /* ENABLE ACCELEROMETER */
     WbDeviceTag accelerometer = wb_robot_get_device("accelerometer");
     wb_accelerometer_enable(accelerometer, TIME_STEP*TIME_STEP_MULTIPLIER);
@@ -100,16 +108,18 @@ int main(int argc, char *argv[]) {
     wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
     wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
     prevState = getNewState(accelerometer);
+    if(TRAIN_ACTIVE == 0)
+      eps = 0;
     
     for (;;) {
         nextAction = chooseAction(prevState);
         executeAction(nextAction);      
         currentState = getNewState(accelerometer);
         printf("estait: %d\n",currentState);
-        if (TRAIN_ACTIVE == 1)
+        if (epsilon_count>=0){
           updateQ(nextAction, prevState, currentState, reinforcement);
-        
-        updateEpsilon();
+          updateEpsilon();
+        }
         print_matrix();
         prevState = currentState;
         
@@ -177,8 +187,14 @@ updateQ(Action action, State prevState, State currentState, float reinforcement)
     int r = reinforcement_function(action, currentState,prevState);
     short bestAction = getMaxRewardAction(currentState);
     float max = GAMMA * Q[currentState][bestAction];
-    
-    Q[prevState][action] += ALPHA * (r + max - Q[prevState][action]);
+    float temporal_difference = ALPHA * (r + max - Q[prevState][action]);
+    Q[prevState][action] += temporal_difference;
+    if(learning_index< ((MAX_EPS/EPSILON_DELTA)*4)){
+      learning_reinforcement[learning_index]=(learning_index==0)?0:learning_reinforcement[learning_index-1];
+      learning_reinforcement[learning_index]=learning_reinforcement[learning_index]+temporal_difference;
+      learning_index++;
+    }
+
 }
 
 //revisar
@@ -237,7 +253,7 @@ reinforcement_function(Action action, State actualState, State prevState ) {
     return 60;
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
-    return -100;
+    return -60;
   }
   return 0;
 }
@@ -266,10 +282,16 @@ updateEpsilon() {
       if (epsilon_count > 0) {
         eps = MAX_EPS;
         epsilon_count--;
+        if(epsilon_count == 0){
+          write_learning_curve();
+          save_matrix();
+
+        }
       } else {
         eps = 0;
+        epsilon_count--;        
       }
-      //save_matrix();
+      
     } else {
         eps -= EPSILON_DELTA;
     }
@@ -302,4 +324,16 @@ void read_matrix(){
     fread(Q,sizeof(float),STATES*ACTIONS,fp);
   }
   fclose(fp);
+}
+
+void write_learning_curve(){
+  FILE* fp = fopen("learning_curve.csv","w");
+  if(fp != NULL){
+    int i=0;
+    for(i=0;i<learning_index;i++){
+      fprintf(fp,"%f\n",learning_reinforcement[i]);
+    }
+
+  }
+
 }

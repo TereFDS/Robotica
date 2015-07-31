@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.263751 0.95909 0.102869 3.01993
-  position 0.0897205 0.746056 -2.17345
+  orientation -0.321047 0.820974 0.472155 2.57633
+  position 0.141792 1.78098 -0.847881
 }
 Background {
   skyColor [
@@ -4278,6 +4278,7 @@ DEF E_PUCK DifferentialWheels {
     density -1
     mass 0.15
   }
+  controller "e-puck_final_companion"
   axleLength 0.052
   wheelRadius 0.0205
   maxSpeed 6.28
