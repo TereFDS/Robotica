@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.581681 0.613618 0.533967 2.05499
-  position 0.283703 0.690201 -0.027135
+  orientation -0.263751 0.95909 0.102869 3.01993
+  position 0.0897205 0.746056 -2.17345
 }
 Background {
   skyColor [
@@ -168,7 +168,7 @@ DEF B Solid {
 }
 DEF A Solid {
   translation 0.00229669 0.0597875 6.66482e-07
-  rotation -0.00553715 0.999973 0.0049363 1.57196
+  rotation -0.00553715 0.999972 0.0049363 1.57196
   children [
     DEF rebordeHor2 Transform {
       translation 0.003 0.01 -0.349
@@ -308,8 +308,8 @@ DEF A Solid {
   }
 }
 DEF E_PUCK DifferentialWheels {
-  translation 0.269588 0.0674919 0.00191366
-  rotation -0.00539727 0.999973 0.00489903 1.5973
+  translation 0.271499 0.0674919 0.000476156
+  rotation -0.005372 0.999977 0.00417926 1.74906
   children [
     DEF EPUCK_LEFT_WHEEL Solid {
       translation -0.0259998 0.0200336 -5.20305e-07
