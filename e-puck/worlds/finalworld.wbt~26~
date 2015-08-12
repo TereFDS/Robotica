@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.581681 0.613618 0.533967 2.05499
-  position 0.283703 0.690201 -0.027135
+  orientation -0.355367 0.885576 0.299113 2.44061
+  position 0.44562 0.999854 -0.936399
 }
 Background {
   skyColor [
@@ -22,7 +22,6 @@ PointLight {
   location 0 0.1 0
 }
 Solid {
-  translation -0.5 0 -0.5
   children [
     Shape {
       geometry ElevationGrid {
@@ -308,8 +307,8 @@ DEF A Solid {
   }
 }
 DEF E_PUCK DifferentialWheels {
-  translation 0.269588 0.0674919 0.00191366
-  rotation -0.00539727 0.999973 0.00489903 1.5973
+  translation 0.271499 0.0674919 0.000476156
+  rotation -0.005372 0.999977 0.00417926 1.74906
   children [
     DEF EPUCK_LEFT_WHEEL Solid {
       translation -0.0259998 0.0200336 -5.20305e-07

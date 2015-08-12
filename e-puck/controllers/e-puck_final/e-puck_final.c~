@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+<<<<<<< HEAD
 #define TIME_STEP 64
 #define TIME_STEP_MULTIPLIER 10
 #define WHEEL_RADIUS 0.0205
@@ -28,6 +28,40 @@
 #define TRAIN_ACTIVE 1
 #define EPOQUES 4
 #define ITERATIONS 1000
+=======
+
+#define TIME_STEP           64
+#define TIME_STEP_MULTIPLIER 16
+#define WHEEL_RADIUS        0.0205
+#define AXLE_LENGTH         0.052
+#define ENCODER_RESOLUTION  159.23
+#define RANGE               (1024 / 2)
+
+#define X_AXIS              0
+#define Y_AXIS              2
+#define Z_AXIS              1
+
+#define FORWARD_SPEED       170
+#define BACKWARD_SPEED      170
+
+
+#define GRAVITY             9.8
+
+#define ACC_THRESHOLD       1.3
+#define ACC_THRESHOLD_LITLE 3.8
+
+#define ACTIONS             3
+#define STATES              5
+
+#define GAMMA               0.9 
+#define ALPHA               0.1
+
+#define EPSILON_DELTA       0.001
+
+#define MAX_EPS             1
+#define TRAIN_ACTIVE        1
+
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
 
 int epsilon_count = 1; //cantidad de epocas
 float eps = MAX_EPS;
@@ -58,7 +92,11 @@ typedef enum {
   BALANCED, LITLE_LOW, LOW, LITLE_HIGH, HIGH
 } State;
 typedef enum {
+<<<<<<< HEAD
+  STAY, /*GO_FOWARD_LITLE, */GO_FOWARD, /*GO_BACKWARD_LITLE,*/ GO_BACKWARD
+=======
     STAY, /*GO_FOWARD_LITLE, */GO_FOWARD, /*GO_BACKWARD_LITLE,*/ GO_BACKWARD
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
 } Action;
 
 State getNewState(WbDeviceTag tag);
@@ -77,6 +115,7 @@ void write_epsilon();
 void read_epsilon();
 
 int main(int argc, char *argv[]) {
+<<<<<<< HEAD
   int iterations=0;
   float yAcceleration;
   float reinforcement = 0;
@@ -104,6 +143,40 @@ int main(int argc, char *argv[]) {
     if (eps>=0){
       updateQ(nextAction, prevState, currentState, reinforcement);
       updateEpsilon();
+=======
+    float yAcceleration;
+    float reinforcement = 0;
+    Action nextAction;
+    State prevState, currentState;
+    
+    /* initialize Webots */
+    wb_robot_init();
+    
+    /* ENABLE ACCELEROMETER */
+    WbDeviceTag accelerometer = wb_robot_get_device("accelerometer");
+    wb_accelerometer_enable(accelerometer, TIME_STEP*TIME_STEP_MULTIPLIER);
+    
+    // ENABLING WHEELS
+    wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
+    wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
+    prevState = getNewState(accelerometer);
+    if(TRAIN_ACTIVE == 0)
+      eps = 0;
+    
+    //read_matrix();
+    for (;;) {
+        nextAction = chooseAction(prevState);
+        executeAction(nextAction);      
+        currentState = getNewState(accelerometer);
+        printf("estait: %d\n",currentState);
+        if (epsilon_count>=0){
+          updateQ(nextAction, prevState, currentState, reinforcement);
+          updateEpsilon();
+        }
+        print_matrix();
+        prevState = currentState;
+        
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
     }
     iterations++;
     print_matrix();
@@ -115,6 +188,7 @@ int main(int argc, char *argv[]) {
 
 void
 executeAction(const Action nextAction) {
+<<<<<<< HEAD
   /*if (nextAction == GO_FOWARD_LITLE) {
   wb_differential_wheels_set_speed(FORWARD_SPEED, FORWARD_SPEED);
   }
@@ -128,6 +202,24 @@ executeAction(const Action nextAction) {
   else {
     wb_differential_wheels_set_speed(0, 0);
   }
+=======
+  
+    /*if (nextAction == GO_FOWARD_LITLE) {
+        wb_differential_wheels_set_speed(FORWARD_SPEED, FORWARD_SPEED);
+    } 
+    else */if (nextAction == GO_FOWARD) {
+        wb_differential_wheels_set_speed(1*FORWARD_SPEED, 1*FORWARD_SPEED);
+    } /*else if (nextAction == GO_BACKWARD_LITLE) {
+        wb_differential_wheels_set_speed(-BACKWARD_SPEED, -BACKWARD_SPEED);
+    }*/ else if (nextAction == GO_BACKWARD){ 
+        wb_differential_wheels_set_speed(-1*BACKWARD_SPEED, -1*BACKWARD_SPEED);
+    }
+    else {
+        wb_differential_wheels_set_speed(0, 0);
+    }
+
+
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
   wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
 }
 
@@ -162,6 +254,18 @@ chooseAction(const State state) {
 
 void
 updateQ(Action action, State prevState, State currentState, float reinforcement) {
+<<<<<<< HEAD
+  int r = reinforcement_function(action, currentState,prevState);
+  short bestAction = getMaxRewardAction(currentState);
+  float max = GAMMA * Q[currentState][bestAction];
+  float temporal_difference = ALPHA * (r + max - Q[prevState][action]);
+  Q[prevState][action] += temporal_difference;
+  if(learning_index< (1000*2)){
+    learning_reinforcement[learning_index]=(learning_index==0)?0:learning_reinforcement[learning_index-1];
+    learning_reinforcement[learning_index]=learning_reinforcement[learning_index]+r;
+    learning_index++;
+  }
+=======
     
     int r = reinforcement_function(action, currentState,prevState);
     short bestAction = getMaxRewardAction(currentState);
@@ -174,12 +278,60 @@ updateQ(Action action, State prevState, State currentState, float reinforcement)
       learning_index++;
     }
 
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
 }
 
 //revisar
 int
 reinforcement_function(Action action, State actualState, State prevState ) {
   /*if(prevState==actualState && actualState==BALANCED){
+<<<<<<< HEAD
+  return 20;
+  }
+  else if(prevState==actualState && (actualState==LITLE_LOW)){
+  if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
+  return 2;
+  }
+  return -2;
+  }
+  else if(prevState==actualState && (actualState==LITLE_HIGH)){
+  if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
+  return 2;
+  }
+  return -2;
+  }
+  else if(prevState==actualState && (actualState==LOW)){
+  if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
+  return 8;
+  }
+  return -8;
+  }
+  else if(prevState==actualState && (actualState==HIGH)){
+  if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
+  return 8;
+  }
+  return -8;
+  }
+  else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+  return -4;
+  }
+  else if(prevState==BALANCED && (actualState==LOW || actualState==HIGH)){
+  return -16;
+  }
+  else if(actualState==BALANCED){
+  return 10;
+  }
+  else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
+  return 6;
+  }
+  else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
+  return -6;
+  }
+  return 0;
+  */
+ 
+  /*if(prevState==actualState && actualState==BALANCED){
+=======
     return 20;
   }
   else if(prevState==actualState && (actualState==LITLE_LOW)){
@@ -225,6 +377,7 @@ reinforcement_function(Action action, State actualState, State prevState ) {
   */
   
   if(prevState==actualState && actualState==BALANCED){
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
     return 20;
   }
   else if(prevState==actualState && (actualState==LITLE_LOW)){
@@ -253,6 +406,19 @@ reinforcement_function(Action action, State actualState, State prevState ) {
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
     return -6;
+<<<<<<< HEAD
+  }*/
+  
+  if(actualState==BALANCED){
+    return 10;
+  }
+  else if(actualState==LITLE_LOW || actualState==LITLE_HIGH){
+    return -2;
+  }
+  else if(actualState==LOW || actualState==HIGH){
+    return -6;
+=======
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
   }
   return 0;
 }
@@ -276,7 +442,14 @@ getMaxRewardAction(State state) {
 
 void
 updateEpsilon() {
-
+<<<<<<< HEAD
+  if (eps <= 0) {
+    write_learning_curve();
+    save_matrix();
+    /*if (epsilon_count > 0) {
+      eps = MAX_EPS;
+      epsilon_count--;
+=======
     if (eps <= 0) {
       if (epsilon_count > 0) {
         eps = MAX_EPS;
@@ -292,6 +465,7 @@ updateEpsilon() {
         epsilon_count--;        
       }
       
+>>>>>>> 1d05cbf342e020abef25a710eb770f9df7a63e8e
     } else {
       if(epsilon_count == 0){
         printf("guarda refuerzosssss\n");
@@ -300,7 +474,7 @@ updateEpsilon() {
       }
       eps = 0;
       epsilon_count--;
-    }
+    }*/
   } else {
     eps -= EPSILON_DELTA/EPOQUES;
   }
