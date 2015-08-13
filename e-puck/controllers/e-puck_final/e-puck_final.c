@@ -64,7 +64,7 @@ typedef enum {
 State getNewState(WbDeviceTag tag);
 Action chooseAction(const State state);
 void executeAction(const Action nextAction);
-void updateQ(Action action, State prevState, State currentState,float reinforcement);
+void updateQ(Action action, State prevState, State currentState);
 Action getMaxRewardAction(State state);
 float random_num();
 int reinforcement_function(Action action, State actualState, State prevState);
@@ -94,21 +94,23 @@ int main(int argc, char *argv[]) {
   if(TRAIN_ACTIVE == 0)
     eps = 0;
   //read_matrix();
-  read_epsilon();
+  //read_epsilon();
   for (;iterations<=ITERATIONS;) {
     nextAction = chooseAction(prevState);
     executeAction(nextAction);
     currentState = getNewState(accelerometer);
-    printf("estait: %d\n",currentState);
+    printf("state: %s\n",(currentState==0)?"balanced":((currentState==1)?"litle low":((currentState==2)?"low":((currentState==3)?"litle high":"high"))));
     
     if (eps>=0){
-      updateQ(nextAction, prevState, currentState, reinforcement);
+      updateQ(nextAction, prevState, currentState);
       updateEpsilon();
     }
     iterations++;
     print_matrix();
     prevState = currentState;
   }
+  write_learning_curve();
+  save_matrix();
   write_epsilon();
   return 0;
 }
@@ -134,7 +136,7 @@ executeAction(const Action nextAction) {
 State
 getNewState(WbDeviceTag tag) {
   float a = getAcceleration(tag);
-  printf("aceleracion: %f\n",a);
+  printf("inclination angle: %f\n",a);
   if (fabs(a) < ACC_THRESHOLD) {
     return BALANCED;
   } else if (a >= 0) {
@@ -161,7 +163,7 @@ chooseAction(const State state) {
 }
 
 void
-updateQ(Action action, State prevState, State currentState, float reinforcement) {
+updateQ(Action action, State prevState, State currentState) {
     
     int r = reinforcement_function(action, currentState,prevState);
     short bestAction = getMaxRewardAction(currentState);
@@ -180,51 +182,6 @@ updateQ(Action action, State prevState, State currentState, float reinforcement)
 int
 reinforcement_function(Action action, State actualState, State prevState ) {
   /*if(prevState==actualState && actualState==BALANCED){
-    return 20;
-  }
-  else if(prevState==actualState && (actualState==LITLE_LOW)){
-    if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
-      return 2;
-    }
-    return -2;
-  }
-  else if(prevState==actualState && (actualState==LITLE_HIGH)){
-    if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
-      return 2;
-    }
-    return -2;
-  }
-  else if(prevState==actualState && (actualState==LOW)){
-    if(action == GO_FOWARD_LITLE || action == GO_FOWARD){
-      return 8;
-    }
-    return -8;
-  }
-  else if(prevState==actualState && (actualState==HIGH)){
-    if(action == GO_BACKWARD_LITLE || action == GO_BACKWARD){
-      return 8;
-    }
-    return -8;
-  }
-  else if(prevState==BALANCED && (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return -4;
-  }
-  else if(prevState==BALANCED && (actualState==LOW || actualState==HIGH)){
-    return -16;
-  }
-  else if(actualState==BALANCED){
-    return 10;
-  }
-  else if((prevState==LOW ||prevState==HIGH)&& (actualState==LITLE_LOW || actualState==LITLE_HIGH)){
-    return 6;
-  }
-  else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
-    return -6;
-  }
-  return 0;
-  */
-  
-  if(prevState==actualState && actualState==BALANCED){
     return 20;
   }
   else if(prevState==actualState && (actualState==LITLE_LOW)){
@@ -253,6 +210,21 @@ reinforcement_function(Action action, State actualState, State prevState ) {
   }
   else if((prevState==LITLE_LOW ||prevState==LITLE_HIGH)&& (actualState==LOW || actualState==HIGH)){
     return -6;
+  }*/
+  if(actualState==BALANCED){
+    return 2;
+  }
+  else if(actualState==LITLE_LOW){
+    return -1;
+  }
+  else if(actualState==LITLE_HIGH){
+    return -1;
+  }
+  else if(actualState==LOW){
+    return -2;
+  }
+  else if(actualState==HIGH){
+    return -2;
   }
   return 0;
 }
@@ -292,15 +264,6 @@ updateEpsilon() {
         epsilon_count--;        
       }
       
-    } else {
-      if(epsilon_count == 0){
-        printf("guarda refuerzosssss\n");
-        write_learning_curve();
-        save_matrix();
-      }
-      eps = 0;
-      epsilon_count--;
-    }
   } else {
     eps -= EPSILON_DELTA/EPOQUES;
   }
