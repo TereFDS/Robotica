@@ -25,12 +25,12 @@
 #define ALPHA 0.1
 #define EPSILON_DELTA 0.001
 #define MAX_EPS 1
-#define TRAIN_ACTIVE 0
+#define TRAIN_ACTIVE 1
 #define EPOQUES 4
 #define ITERATIONS 1000
 
-int epsilon_count = 1; //cantidad de epocas
-float eps = 0.297027;
+int epsilon_count = 3; //cantidad de epocas
+float eps = MAX_EPS;
 float learning_reinforcement[(int)(1000)*2];
 int learning_index= 0;
 /*float Q[STATES][ACTIONS] = {
@@ -105,15 +105,16 @@ int main(int argc, char *argv[]) {
   prevState = getNewState(accelerometer);
   if(TRAIN_ACTIVE == 0)
     eps = -1;
-  //save_matrix();
-  read_matrix();
+  
+  //read_matrix();
+  
   for (;;) {
     nextAction = chooseAction(prevState);
     executeAction(nextAction);
     currentState = getNewState(accelerometer);
     printf("state: %s\n",(currentState==0)?"balanced":((currentState==1)?"litle low":((currentState==2)?"low":((currentState==3)?"litle high":"high"))));
     
-    if (eps>=0){
+    if (epsilon_count>=0){
       updateQ(nextAction, prevState, currentState);
       updateEpsilon();
     }
@@ -277,7 +278,7 @@ updateEpsilon() {
       }
       
   } else {
-    eps -= EPSILON_DELTA/EPOQUES;
+    eps -= EPSILON_DELTA;
   }
   printf("epsilon: %f \n",eps);
 }
