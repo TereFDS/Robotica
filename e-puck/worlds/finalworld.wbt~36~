@@ -7,8 +7,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.0613133 0.995116 0.0773672 2.4027
-  position 0.593788 0.164813 -1.0291
+  orientation 0.0358412 0.996196 0.0794278 3.87021
+  position -0.109841 0.109714 -0.282633
 }
 Background {
   skyColor [
@@ -72,13 +72,13 @@ DEF B Solid {
       children [
         DEF prisma Shape {
           geometry Box {
-            size 0.01 0.05 0.09
+            size 0.01 0.05 0.08
           }
         }
       ]
     }
     DEF col1 Transform {
-      translation 0 0.04 0.045
+      translation 0 0.04 0.043
       children [
         DEF col1 Shape {
           geometry Box {
@@ -88,7 +88,7 @@ DEF B Solid {
       ]
     }
     DEF col2 Transform {
-      translation 0 0.04 -0.045
+      translation 0 0.04 -0.043
       children [
         DEF col2 Shape {
           geometry DEF box Box {
@@ -101,7 +101,7 @@ DEF B Solid {
   boundingObject Group {
     children [
       DEF col2 Transform {
-        translation 0 0.04 -0.045
+        translation 0 0.04 -0.043
         children [
           DEF col2 Shape {
             appearance Appearance {
@@ -117,7 +117,7 @@ DEF B Solid {
         ]
       }
       DEF col1 Transform {
-        translation 0 0.04 0.045
+        translation 0 0.04 0.043
         children [
           DEF col1 Shape {
             appearance Appearance {

@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     eps = 0;
   //read_matrix();
   //read_epsilon();
-  for (;iterations<=ITERATIONS;) {
+  for (;;) {
     nextAction = chooseAction(prevState);
     executeAction(nextAction);
     currentState = getNewState(accelerometer);
