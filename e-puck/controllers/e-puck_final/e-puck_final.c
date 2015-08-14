@@ -25,12 +25,12 @@
 #define ALPHA 0.1
 #define EPSILON_DELTA 0.001
 #define MAX_EPS 1
-#define TRAIN_ACTIVE 1
+#define TRAIN_ACTIVE 0
 #define EPOQUES 4
 #define ITERATIONS 1000
 
 int epsilon_count = 1; //cantidad de epocas
-float eps = MAX_EPS;
+float eps = 0.297027;
 float learning_reinforcement[(int)(1000)*2];
 int learning_index= 0;
 /*float Q[STATES][ACTIONS] = {
@@ -40,6 +40,17 @@ int learning_index= 0;
 {276.978668, 319.857056, 319.968262, 326.143463, 269.744568},
 {293.818787, 316.082855, 253.805588, 638.329224, 489.348602}
 };*/
+
+// nueva matriz
+
+/*float Q[STATES][ACTIONS] = {
+{11.703585, 0.195319, 2.904115}, 
+{-2.962060, -2.780822, -1.905183}, 
+{-11.622477, 1.187262, -10.253217}, 
+{-3.458640, -4.906961, -0.491758}, 
+{-17.803988, -17.818291, -6.109895}
+}; */ 
+
 float Q[STATES][ACTIONS] = {
   {0,0,0},
   {0,0,0},
@@ -47,6 +58,7 @@ float Q[STATES][ACTIONS] = {
   {0,0,0},
   {0,0,0}
 };
+
 double getAcceleration(WbDeviceTag accelerometer) {
   double * value =wb_accelerometer_get_values(accelerometer);
   //printf("otra posible medida? %f\n",sin(value[X_AXIS]));
@@ -92,9 +104,9 @@ int main(int argc, char *argv[]) {
   wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
   prevState = getNewState(accelerometer);
   if(TRAIN_ACTIVE == 0)
-    eps = 0;
-  //read_matrix();
-  //read_epsilon();
+    eps = -1;
+  //save_matrix();
+  read_matrix();
   for (;;) {
     nextAction = chooseAction(prevState);
     executeAction(nextAction);
