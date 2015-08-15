@@ -25,11 +25,11 @@
 #define ALPHA 0.1
 #define EPSILON_DELTA 0.001
 #define MAX_EPS 1
-#define TRAIN_ACTIVE 0
+#define TRAIN_ACTIVE 1
 #define EPOQUES 4
 #define ITERATIONS 1000
 
-int epsilon_count = -1; //cantidad de epocas
+int epsilon_count = 4; //cantidad de epocas -1 (ahora tiene que valer 4 porque usamos 5 epocas)
 float eps = MAX_EPS;
 float learning_reinforcement[(int)(1000)*2];
 int learning_index= 0;
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
   wb_differential_wheels_enable_encoders(TIME_STEP*TIME_STEP_MULTIPLIER);
   wb_robot_step(TIME_STEP*TIME_STEP_MULTIPLIER);
   prevState = getNewState(accelerometer);
-  if(TRAIN_ACTIVE == 0)
+  if(TRAIN_ACTIVE == 1)
     eps = -1;
   
   read_matrix();
