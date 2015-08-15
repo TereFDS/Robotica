@@ -168,7 +168,7 @@ DEF B Solid {
 }
 DEF A Solid {
   translation 0.00316608 0.0596873 -0.000274296
-  rotation 0.00999951 0.99995 -0.00074748 1.5726
+  rotation 0.01 0.999999 -0.000747517 1.5726
   children [
     DEF rebordeHor2 Transform {
       translation 0.003 0.01 -0.349
@@ -2298,7 +2298,7 @@ DEF E_PUCK DifferentialWheels {
   encoderResolution 159.23
 }
 DEF E_PUCK DifferentialWheels {
-  translation -0.216543 0.0750808 0.000736342
+  translation -0.256543 0.0650808 0.000736342
   rotation 0.000801349 0.999999 0.00116543 -1.58752
   children [
     DEF EPUCK_LEFT_WHEEL Solid {

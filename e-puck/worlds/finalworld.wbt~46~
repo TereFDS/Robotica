@@ -2298,7 +2298,7 @@ DEF E_PUCK DifferentialWheels {
   encoderResolution 159.23
 }
 DEF E_PUCK DifferentialWheels {
-  translation -0.216543 0.0750808 0.000736342
+  translation -0.196543 0.0750808 0.000736342
   rotation 0.000801349 0.999999 0.00116543 -1.58752
   children [
     DEF EPUCK_LEFT_WHEEL Solid {

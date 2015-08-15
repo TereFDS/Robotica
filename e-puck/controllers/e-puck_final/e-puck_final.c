@@ -25,11 +25,11 @@
 #define ALPHA 0.1
 #define EPSILON_DELTA 0.001
 #define MAX_EPS 1
-#define TRAIN_ACTIVE 1
+#define TRAIN_ACTIVE 0
 #define EPOQUES 4
 #define ITERATIONS 1000
 
-int epsilon_count = 3; //cantidad de epocas
+int epsilon_count = -1; //cantidad de epocas
 float eps = MAX_EPS;
 float learning_reinforcement[(int)(1000)*2];
 int learning_index= 0;
@@ -41,16 +41,23 @@ int learning_index= 0;
 {293.818787, 316.082855, 253.805588, 638.329224, 489.348602}
 };*/
 
-// nueva matriz
+// nueva matriz (que parece funcionar)
 
 /*float Q[STATES][ACTIONS] = {
-{11.703585, 0.195319, 2.904115}, 
-{-2.962060, -2.780822, -1.905183}, 
-{-11.622477, 1.187262, -10.253217}, 
-{-3.458640, -4.906961, -0.491758}, 
-{-17.803988, -17.818291, -6.109895}
-}; */ 
+{-1.322773, -3.350827, -2.919920}, 
+{-2.665848, 0.191065, -9.550050}, 
+{-25.448944, -12.997213, -33.240997},
+{-9.330454, -6.218776, -0.099255},
+{-21.824425, -17.649944, -5.335610}
+};*/  
 
+/*float Q[STATES][ACTIONS] = {
+{8.608189, -3.487211, -1.776637}, 
+{-6.350226, -0.974549, -8.272821}, 
+{-16.809811, -13.805308, -16.765018},
+{-8.367319, -7.912634, -2.446282}, 
+{-11.970656, -14.247732, -8.355040},
+};*/
 float Q[STATES][ACTIONS] = {
   {0,0,0},
   {0,0,0},
@@ -106,7 +113,7 @@ int main(int argc, char *argv[]) {
   if(TRAIN_ACTIVE == 0)
     eps = -1;
   
-  //read_matrix();
+  read_matrix();
   
   for (;;) {
     nextAction = chooseAction(prevState);
@@ -234,10 +241,10 @@ reinforcement_function(Action action, State actualState, State prevState ) {
     return -1;
   }
   else if(actualState==LOW){
-    return -2;
+    return -4;
   }
   else if(actualState==HIGH){
-    return -2;
+    return -4;
   }
   return 0;
 }
